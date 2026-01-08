@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDYTECH | Engineering Excellence</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --accent-amber: #ffb300;
+            --deep-slate: #0f172a;
+            --soft-white: #f8fafc;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --font-main: 'Inter', sans-serif;
+            --font-heading: 'Sora', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--deep-slate);
+            color: var(--soft-white);
+            font-family: var(--font-main);
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.01em;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Heading Overhaul */
+        h1, h2, h3, h4, h5, .hero-text-large, .logo-name {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .navbar-wide {
+            padding: 0.8rem 5%;
+            background: rgba(15, 23, 42, 0.75) !important;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo-brand { display: flex; align-items: center; text-decoration: none; gap: 12px; }
+        
+        .logo-icon { 
+            border: 1.5px solid var(--accent-amber); 
+            padding: 2px 8px; 
+            font-weight: 800; 
+            font-family: 'Consolas', monospace; 
+            color: var(--accent-amber); 
+            border-radius: 4px; 
+            font-size: 0.85rem; 
+        }
+
+        .logo-name { 
+            font-size: 1.1rem; 
+            font-weight: 800; 
+            letter-spacing: 1px; 
+            color: #fff; 
+            text-transform: uppercase;
+        }
+
+        .nav-link { 
+            font-family: var(--font-main);
+            font-weight: 500; 
+            color: #94a3b8 !important; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            transition: 0.3s;
+        }
+
+        .nav-link:hover { color: var(--accent-amber) !important; }
+
+        .hero-canvas { 
+            min-height: 90vh; 
+            display: flex; 
+            align-items: center; 
+            padding: 100px 8%; 
+            background-image: radial-gradient(circle at 80% 20%, rgba(255, 179, 0, 0.05) 0%, transparent 40%), linear-gradient(to bottom, var(--deep-slate), #020617); 
+        }
+
+        .hero-text-large { 
+            font-size: clamp(2.5rem, 6vw, 4.5rem); 
+            line-height: 1.05; 
+            margin-bottom: 1.5rem; 
+        }
+
+        .btn-edy { 
+            font-family: var(--font-main);
+            border: 1px solid var(--accent-amber); 
+            background: transparent; 
+            color: var(--accent-amber); 
+            padding: 14px 35px; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            font-size: 0.8rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.1em; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            text-decoration: none; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+        }
+
+        .btn-edy:hover { 
+            background: var(--accent-amber); 
+            color: #000; 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 25px rgba(255, 179, 0, 0.25); 
+        }
+
+        .cv-link { 
+            font-family: var(--font-main);
+            color: #fff; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--accent-amber); 
+            padding-bottom: 4px; 
+            margin-left: 25px; 
+            transition: 0.3s; 
+        }
+
+        footer { 
+            padding: 3rem 5%; 
+            border-top: 1px solid var(--glass-border); 
+            background: #020617; 
+        }
+
+        .footer-text { 
+            font-family: var(--font-main);
+            color: #475569; 
+            font-size: 0.75rem; 
+            letter-spacing: 2px; 
+            text-transform: uppercase; 
+            font-weight: 600; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid position-fixed top-0 start-0 w-100" style="z-index: 2000; margin-top: 100px;">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show border-0 shadow-lg mx-auto" role="alert" style="max-width: 500px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); color: #fff; border-left: 4px solid var(--accent-amber) !important;">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill me-3" style="color: var(--accent-amber); font-size: 1.2rem;"></i>
+                        <span style="font-size: 0.9rem; font-weight: 500;">{{ message }}</span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-wide">
+        <div class="container-fluid px-0">
+            <a class="logo-brand" href="{% url 'index' %}">
+                <div class="logo-icon">EDY</div>
+                <div class="logo-name">TECH</div>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#edyNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        
+            <div class="collapse navbar-collapse" id="edyNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'index' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'work' %}">Work</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'support' %}">Support</a></li> 
+                    <li class="nav-item"><a class="nav-link px-3" href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main style="flex: 1 0 auto;">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p class="footer-text mb-0"><span class="footer-highlight">eddytech</span> &copy; 2026</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        
+        setTimeout(function() {
+            let alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                let bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

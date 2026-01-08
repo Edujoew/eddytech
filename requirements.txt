@@ -1,4 +1,5 @@
 asgiref==3.11.0
+daraja==0.0.4
 Django==6.0.1
 pillow==12.1.0
 python-dotenv==1.2.1

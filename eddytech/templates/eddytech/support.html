@@ -1,0 +1,48 @@
+{% extends 'eddytech/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="py-5" style="background: #020617; margin-top: 80px; min-height: 90vh;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="hero-text-large" style="font-size: 3.5rem;">Fuel the <span class="gradient-text">Ecosystem.</span></h1>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="p-4 h-100 d-flex flex-column" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); border-radius: 12px;">
+                    <div class="logo-icon mb-4 mx-auto" style="width: fit-content; padding: 10px 15px; border-color: #25D366; color: #25D366;">
+                        <i class="bi bi-phone-vibrate"></i>
+                    </div>
+                    <h3 class="text-white fw-bold mb-3 text-center">M-PESA Support</h3>
+                    <form method="POST" action="{% url 'support' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="small text-secondary mb-1">PHONE NUMBER</label>
+                            <input type="text" name="phone" class="form-control bg-transparent text-white border-secondary" placeholder="2547..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small text-secondary mb-1">AMOUNT (KES)</label>
+                            <input type="number" name="amount" class="form-control bg-transparent text-white border-secondary" placeholder="100" required>
+                        </div>
+                        <button type="submit" class="btn btn-edy w-100 mt-2" style="border-color: #25D366; color: #25D366;">SEND STK PUSH</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-4 h-100 d-flex flex-column text-center" style="background: rgba(255, 179, 0, 0.03); border: 1px solid var(--accent-amber); border-radius: 12px;">
+                    <div class="logo-icon mb-4 mx-auto" style="width: fit-content; padding: 10px 15px; background: var(--accent-amber); color: #000;">
+                        <i class="bi bi-code-slash"></i>
+                    </div>
+                    <h3 class="text-white fw-bold mb-3">Hire Me</h3>
+                    <p class="text-secondary small mb-4">I am available for Django, Python, and Full Stack contracts.</p>
+                    <div class="mt-auto">
+                        <a href="{% url 'contact' %}" class="btn btn-edy w-100" style="background: var(--accent-amber); color: #000;">START A PROJECT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

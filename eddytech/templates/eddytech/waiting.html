@@ -1,0 +1,98 @@
+{% extends 'eddytech/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="py-5 d-flex align-items-center" style="background: #020617; min-height: 90vh; margin-top: 60px;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div id="status-card" class="text-center p-5" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; backdrop-filter: blur(10px);">
+                    
+                    <div id="status-content">
+                        <div class="position-relative mb-5 d-inline-block">
+                            <div class="spinner-grow text-warning" style="width: 100px; height: 100px; opacity: 0.15;" role="status"></div>
+                            <div class="position-absolute top-50 start-50 translate-middle">
+                                <i class="bi bi-phone-vibrate-fill text-warning" style="font-size: 3rem;"></i>
+                            </div>
+                        </div>
+
+                        <h2 class="text-white fw-bold mb-3">Authenticating <span class="text-warning">Payment</span></h2>
+                        <p class="text-secondary mb-4">We've sent a request to your phone. Please enter your <b>M-Pesa PIN</b> to support <b>John Edwards</b>.</p>
+
+                        <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
+                            <div class="spinner-border spinner-border-sm text-warning" role="status"></div>
+                            <span class="small text-uppercase tracking-widest text-warning" style="letter-spacing: 2px;">Waiting for payment...</span>
+                        </div>
+                        
+                        <div class="progress" style="height: 4px; background: rgba(255,255,255,0.05);">
+                            <div id="poll-progress" class="progress-bar bg-warning progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .btn-edy {
+        background: var(--accent-amber, #ffb300);
+        color: #000;
+        font-weight: 600;
+        padding: 12px 30px;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+    .btn-edy:hover { transform: translateY(-3px); }
+</style>
+
+<script>
+    const checkoutId = "{{ checkout_id }}";
+    const startTime = Date.now();
+    const timeout = 60000; // Stop polling after 60 seconds (Safaricom timeout)
+
+    let checkStatus = setInterval(function() {
+        // Stop if it takes too long
+        if (Date.now() - startTime > timeout) {
+            clearInterval(checkStatus);
+            showFailure("Transaction Timed Out", "We didn't receive a response from your phone in time.");
+            return;
+        }
+
+        fetch(`/check-payment/${checkoutId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'Success') {
+                    clearInterval(checkStatus);
+                    showSuccess();
+                } else if (data.status === 'Failed') {
+                    clearInterval(checkStatus);
+                    showFailure("Payment Cancelled", "The transaction was declined or cancelled on your device.");
+                }
+            })
+            .catch(err => console.error("Polling error:", err));
+    }, 3000); 
+
+    function showSuccess() {
+        document.getElementById('status-content').innerHTML = `
+            <div class="mb-4 text-success"><i class="bi bi-check-circle-fill" style="font-size: 5rem;"></i></div>
+            <h2 class="text-white fw-bold mb-3">Support Received!</h2>
+            <p class="text-secondary mb-5">Thank you for fueling the ecosystem. Your support helps me keep building.</p>
+            <a href="{% url 'index' %}" class="btn btn-edy w-100">Back to Portfolio</a>
+        `;
+    }
+
+    function showFailure(title, msg) {
+        document.getElementById('status-content').innerHTML = `
+            <div class="mb-4 text-danger"><i class="bi bi-exclamation-triangle-fill" style="font-size: 5rem;"></i></div>
+            <h2 class="text-white fw-bold mb-3">${title}</h2>
+            <p class="text-secondary mb-5">${msg}</p>
+            <div class="d-grid gap-2">
+                <a href="{% url 'support' %}" class="btn btn-edy">Try Again</a>
+                <a href="{% url 'index' %}" class="btn btn-outline-secondary">Go Home</a>
+            </div>
+        `;
+    }
+</script>
+{% endblock %}

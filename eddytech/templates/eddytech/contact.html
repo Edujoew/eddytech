@@ -1,0 +1,85 @@
+{% extends 'eddytech/base.html' %}
+
+{% block content %}
+<section id="contact" class="py-5" style="background: #0f172a; margin-top: 80px; min-height: 80vh;">
+    <div class="container px-5">
+        <div class="row g-5">
+            <div class="col-lg-5">
+                <h2 class="gradient-text fw-bold mb-4">Let's Connect</h2>
+                <p class="text-secondary mb-5">Have a project in mind? Reach out via the form or use my direct links below.</p>
+                <div class="d-flex flex-column gap-4">
+                    <a href="https://wa.me/254100554588" target="_blank" class="text-decoration-none d-flex align-items-center gap-3">
+                        <div class="logo-icon icon-whatsapp" style="padding: 10px;"><i class="bi bi-whatsapp"></i></div>
+                        <div>
+                            <small class="text-secondary d-block">WhatsApp</small>
+                            <span class="text-white fw-bold">Chat with me</span>
+                        </div>
+                    </a>
+                    <a href="mailto:johnteedushiks247@gmail.com" class="text-decoration-none d-flex align-items-center gap-3">
+                        <div class="logo-icon icon-email" style="padding: 10px;"><i class="bi bi-envelope"></i></div>
+                        <div>
+                            <small class="text-secondary d-block">Email</small>
+                            <span class="text-white fw-bold">johnteedushiks247@gmail.com</span>
+                        </div>
+                    </a>
+                    <a href="https://linkedin.com/in/johnny-edwards-7b0795393/" target="_blank" class="text-decoration-none d-flex align-items-center gap-3">
+                        <div class="logo-icon icon-linkedin" style="padding: 10px;"><i class="bi bi-linkedin"></i></div>
+                        <div>
+                            <small class="text-secondary d-block">LinkedIn</small>
+                            <span class="text-white fw-bold">John Edwards</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="p-4 p-md-5" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); border-radius: 12px;">
+                    <form method="POST" id="contact-form">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="small text-secondary mb-1">NAME</label>
+                                <input type="text" name="name" class="form-control bg-transparent text-white border-secondary py-2" style="border-color: rgba(255,255,255,0.1) !important;" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-secondary mb-1">EMAIL</label>
+                                <input type="email" name="email" class="form-control bg-transparent text-white border-secondary py-2" style="border-color: rgba(255,255,255,0.1) !important;" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="small text-secondary mb-1">SUBJECT</label>
+                                <input type="text" name="subject" class="form-control bg-transparent text-white border-secondary py-2" style="border-color: rgba(255,255,255,0.1) !important;" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="small text-secondary mb-1">MESSAGE</label>
+                                <textarea name="message" rows="5" class="form-control bg-transparent text-white border-secondary" style="border-color: rgba(255,255,255,0.1) !important;" required></textarea>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" id="submit-btn" class="btn btn-edy w-100">
+                                    <span id="btn-text">SEND MESSAGE</span>
+                                    <span id="btn-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const contactForm = document.getElementById('contact-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function() {
+            submitBtn.disabled = true;
+            btnText.innerText = "SENDING...";
+            btnSpinner.classList.remove('d-none');
+            submitBtn.style.opacity = "0.8";
+        });
+    }
+</script>
+{% endblock %}

@@ -24,16 +24,40 @@
                             <span class="small text-uppercase tracking-widest text-warning" style="letter-spacing: 2px;">Waiting for payment...</span>
                         </div>
                         
-                        <div class="progress" style="height: 4px; background: rgba(255,255,255,0.05);">
+                        <div class="progress mb-5" style="height: 4px; background: rgba(255,255,255,0.05);">
                             <div id="poll-progress" class="progress-bar bg-warning progress-bar-striped progress-bar-animated" style="width: 100%"></div>
                         </div>
-                    </div>
 
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-link text-danger text-decoration-none small fw-bold" data-bs-toggle="modal" data-bs-target="#cancelModal" style="letter-spacing: 1px;">
+                                <i class="bi bi-x-circle me-1"></i> CANCEL REQUEST
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="background: #0f172a; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1) !important;">
+            <div class="modal-body p-5 text-center">
+                <div class="text-warning mb-4">
+                    <i class="bi bi-exclamation-octagon" style="font-size: 4rem;"></i>
+                </div>
+                <h3 class="text-white fw-bold mb-3">Cancel Support?</h3>
+                <p class="text-secondary mb-4">Are you sure you want to stop waiting? If you've already entered your PIN, the transaction might still complete.</p>
+                
+                <div class="d-grid gap-2">
+                    <button type="button" onclick="confirmCancellation()" class="btn btn-danger py-3 fw-bold" style="border-radius: 12px;">YES, CANCEL</button>
+                    <button type="button" class="btn btn-link text-secondary text-decoration-none fw-bold" data-bs-dismiss="modal">NO, KEEP WAITING</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <style>
     .btn-edy {
@@ -44,18 +68,18 @@
         border-radius: 8px;
         transition: transform 0.3s ease;
     }
-    .btn-edy:hover { transform: translateY(-3px); }
+    .btn-edy:hover { transform: translateY(-3px); color: #000; }
+    .tracking-widest { font-size: 0.75rem; font-weight: 700; }
 </style>
 
 <script>
     const checkoutId = "{{ checkout_id }}";
     const startTime = Date.now();
-    const timeout = 60000; // Stop polling after 60 seconds (Safaricom timeout)
+    const timeout = 30000; 
 
     let checkStatus = setInterval(function() {
-        // Stop if it takes too long
         if (Date.now() - startTime > timeout) {
-            clearInterval(checkStatus);
+            stopPolling();
             showFailure("Transaction Timed Out", "We didn't receive a response from your phone in time.");
             return;
         }
@@ -64,15 +88,29 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'Success') {
-                    clearInterval(checkStatus);
+                    stopPolling();
+                    // Close modal if open
+                    const modalElement = document.getElementById('cancelModal');
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    if (modal) modal.hide();
                     showSuccess();
                 } else if (data.status === 'Failed') {
-                    clearInterval(checkStatus);
+                    stopPolling();
                     showFailure("Payment Cancelled", "The transaction was declined or cancelled on your device.");
                 }
             })
             .catch(err => console.error("Polling error:", err));
     }, 3000); 
+
+    function stopPolling() {
+        clearInterval(checkStatus);
+    }
+
+    // New function for modal confirmation
+    function confirmCancellation() {
+        stopPolling();
+        window.location.href = "{% url 'support' %}";
+    }
 
     function showSuccess() {
         document.getElementById('status-content').innerHTML = `

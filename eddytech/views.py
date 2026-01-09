@@ -9,7 +9,9 @@ from .models import Project, Message, MpesaTransaction
 from django_daraja.mpesa.core import MpesaClient
 
 def index(request):
-    return render(request, 'eddytech/index.html')
+    # Fetch projects for the home page so they are available to link to
+    projects = Project.objects.all().order_by('-created_at')[:6]
+    return render(request, 'eddytech/index.html', {'projects': projects})
 
 def work(request):
     projects = Project.objects.all().order_by('-created_at')
@@ -40,13 +42,15 @@ def contact(request):
             fail_silently=False,
         )
 
-        messages.success(request, f"Thank you, {name}! Your message has been sent successfully.")
+        messages.success(request, f"Thank you, {name}! Your message has been sent successfully EddyTech will get back to you in 24hours time.")
         return redirect('contact')
 
     return render(request, 'eddytech/contact.html')
 
-def project_detail(request, pk):
-    project = get_object_or_404(Project, pk=pk)
+
+def project_detail(request, slug):
+    
+    project = get_object_or_404(Project, slug=slug)
     return render(request, 'eddytech/project_detail.html', {'project': project})
 
 def custom_404(request, exception):
